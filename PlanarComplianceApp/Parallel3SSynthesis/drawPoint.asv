@@ -1,0 +1,35 @@
+function [] = drawPoint(x, y, tag, ax)
+
+%finds the tag of the point being plot
+markerTag = ['Tag' tag(6)];
+
+mtag =  findobj(ax, 'Tag', markerTag);
+pt = findobj(ax, 'Tag', tag);
+
+if ~isempty(pt)
+    delete(pt)
+end 
+
+if ~isempty(mtag)
+    delete(mtag)
+end 
+
+
+if strcmp(tag, 'point1')
+    color = '#5DB5F8';
+elseif strcmp(tag, 'point2')
+    color = '#5DB5F8';
+    text(x, y, '  T1', 'Tag', 'Tag2')
+elseif strcmp(tag, 'point3')
+    color = '#77AC30';
+    text(x, y, '  T2', 'Tag', 'Tag3')
+elseif strcmp(tag, 'point4')
+    color = '#A2142F';
+    text(x, y, '  T3', 'Tag', 'Tag3')
+end 
+
+pt = scatter(x,y,'filled','markerfacecolor',color,'tag',tag,'sizedata',75, 'MarkerEdgeColor', [0 0 0]);
+
+set(pt,'ButtonDownFcn',{@MouseClick, ax});
+uistack(pt, "top")
+end

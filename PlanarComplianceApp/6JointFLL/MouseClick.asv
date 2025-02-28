@@ -1,0 +1,72 @@
+function [] = MouseClick(obj, ~, ax)
+
+global C phase dragN ll
+tag = get(obj, 'Tag');
+fig = get(ax, 'Parent');
+[x, y] = getCurrentXY(ax);
+
+xlim = get(ax, 'xlim');
+ylim = get(ax, 'ylim');
+
+if x < xlim(1) || x > xlim(2) || y < ylim(1) || y > ylim(2)
+    return
+end
+
+%% Indicates if a draggable point has been clicked on
+if strcmp(tag, 'J1')
+    dragN(1) = 1;
+    phase = goToPhase(3, ax);
+
+elseif strcmp(tag, 'J2')
+    dragN(2) = 1;
+    phase = goToPhase(4, ax);
+  
+elseif strcmp(tag, 'P2')
+    dragN(3) = 1;
+    phase = goToPhase(6, ax);
+
+elseif strcmp(tag, 'J4')
+    dragN(4) = 1;
+
+elseif strcmp(tag, 'J5')
+    dragN(5) = 1;
+end
+
+%% Update the figure
+if strcmp(get(obj, 'type'), 'figure')
+    if phase >= 2 && phase < 5 || phase == 6
+        updateUI(x, y, ax, C, phase);
+        phase = goToPhase(phase + 1, ax);
+
+    elseif phase == 5
+        [ec1] = checkConditions(ax, C, phase, ll, x, y);
+        if ec1 == 1
+            return
+        end
+
+        updateUI(x, y, ax, C, phase);
+        phase = goToPhase(phase + 1, ax);
+
+    elseif phase == 7
+        [~, ec2] = checkConditions(ax, C, phase, ll, x, y);
+        if ec2 == 1
+            return
+        end
+        
+        updateUI(x, y, ax, C, phase);
+        phase = goToPhase(phase + 1, ax);
+
+    elseif phase == 8
+        [ec1, ec2] = checkConditions(ax, C, phase, ll, x, y);
+        if ec1 == 1 || ec2 == 1
+            return
+        end
+        
+        updateUI(x, y, ax, C, phase);
+        phase = goToPhase(phase + 1, ax);
+    end
+
+end
+
+
+end

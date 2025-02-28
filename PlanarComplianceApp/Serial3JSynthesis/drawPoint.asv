@@ -1,0 +1,36 @@
+function [ ] = drawPoint( x, y, tag, ax)
+%for 3J synthesis
+global x1 y1
+
+pt = findobj(ax,'tag',tag);
+
+if strcmp(tag,'point1')
+    x1 = x;
+    y1 = y;
+size = 90;
+
+elseif strcmp(tag,'point2')
+    size = 90;
+elseif strcmp(tag,'point3')
+    size = 90;
+end
+
+if ~isempty(pt)
+    delete(pt);
+end
+
+pt = scatter(x,y,'filled','markerfacecolor',[0.2 0.6 1],'tag',tag,'sizedata',size);
+
+set(pt,'ButtonDownFcn',{@MouseClick, ax});
+
+if strcmp(tag,'point1')
+    drawLine(x,y,ax);
+end
+
+if strcmp(tag,'point3')
+   drawConnections(ax); 
+end
+
+
+end
+

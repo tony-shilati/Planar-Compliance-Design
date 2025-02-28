@@ -1,0 +1,71 @@
+ function [x,y] = calcIntersections( ax )
+% 
+
+[t23x,t23y] = grabData('N5',ax);
+[t12x,t12y] = grabData('N1',ax);
+[t34x,t34y] = grabData('N2',ax);
+[t14x,t14y] = grabData('N6',ax);
+
+[t5x,t5y] = grabData('N3',ax);
+[t5x2,t5y2] = grabData('N4',ax);
+
+
+w1x = [t12x,t14x];
+w1y = [t12y,t14y];
+
+w2x = [t12x,t23x];
+w2y = [t12y,t23y];
+
+w3x = [t23x,t34x];
+w3y = [t23y,t34y];
+
+w4x = [t14x,t34x];
+w4y = [t14y,t34y];
+
+w5x = [t5x,t5x2];
+w5y = [t5y,t5y2];
+
+drawLine(w1x,w1y,'W1',ax);
+drawLine(w2x,w2y,'W2',ax);
+drawLine(w3x,w3y,'W3',ax);
+drawLine(w4x,w4y,'W4',ax);
+
+[x1,y1,w1norm] = convertToPoint(w1x,w1y);
+[x2,y2,w2norm] = convertToPoint(w2x,w2y);
+[x3,y3,w3norm] = convertToPoint(w3x,w3y);
+[x4,y4,w4norm] = convertToPoint(w4x,w4y);
+[x5,y5,w5norm] = convertToPoint(w5x,w5y);
+
+% 
+% 
+% 
+% text(x(1),y(1),'  J1','tag','J1','PickableParts','none');
+% text(x(2),y(2),'  J2','tag','J2','PickableParts','none');
+% text(x(3),y(3),'  J3','tag','J3','PickableParts','none');
+% text(x(4),y(4),'  J4','tag','J4','PickableParts','none');
+% text(Jx,Jy,'  J5','tag','J5','PickableParts','none');
+% 
+% 
+figh = get(ax,'parent');
+jh = findobj(figh,'tag','jout');
+
+jout = get(jh,'Data');
+
+%jout{1,2:5} = {x(1),x(2),x(3),x(4)};
+jout{1,2} = x1;
+jout{1,3} = x2;
+jout{1,4} = x3;
+jout{1,5} = x4;
+jout{1,6} = Jx;
+jout{2,2} = y(1);
+jout{2,3} = y(2);
+jout{2,4} = y(3);
+jout{2,5} = y(4);
+jout{2,6} = Jy;
+
+
+set(jh,'Data',jout);
+
+
+
+ end 

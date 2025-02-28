@@ -1,0 +1,110 @@
+function [x,y,K] = compliantCenter(K, ax)
+%inputs are the compliance center from the table on the UI and the axes
+%object
+
+%Outputs are the x and y coordinate of the compliance center and the
+%Compliance matrix itself (updated to be made symetric if the user changes
+%an off diagonal from the UI)
+
+%% Ensures that the stiffness matrix is symmetric and calculates the stiffness center
+K(2,1) = K(1,2);
+K(3,1) = K(1,3);
+K(3,2) = K(2,3);
+
+%Updates the table displayed to the user to make it symmetric
+figc = get(ax, 'parent');
+table = findobj(figc, 'tag', 'table');
+set(table, 'Data', K);
+
+
+%gets the eigen values of the compliance matrix
+Ec = eig(K);
+
+%checks to see if the matrix is not positive definite
+if Ec(1,1) < 0 || Ec(2,1) < 0 || Ec(3,1) < 0 || ~isreal(Ec)
+    %displays a warning message to the user
+    warndlg('The stiffness matrix must be positive definite', '', 'modal')
+    uiwait
+
+    %deletes the lines showing the neccesary coditions
+    delete(findobj(ax, 'Tag', 'cone1'))
+    delete(findobj(ax, 'Tag', 'cone2'))
+    delete(findobj(ax, 'Tag', 'ccplot'))
+    return
+end
+
+%Compliance matrix(inverse of stiffness matrix)
+C = inv(K);
+
+%Get neccesary indfomration for calculating the compliance center
+omega = [0 -1;
+         1 0];
+
+g = [C(1,3);
+     C(2,3)];
+
+r = (omega*g)/C(3,3);
+
+
+%sets the output arguments to be the x and y coordinates of the compliance
+%center
+x = r(1,1);
+y = r(2,1);
+
+%% Adds the lines and circle from the sufficient conditions
+%Translated stiffness matrix
+T = [1, 0, -y; 0, 1, x; 0, 0, 1];
+Kk = T*K*T';
+
+D = [Kk(1,1), Kk(1,2); Kk(2,1), Kk(2,2)];
+lambda = eig(D);
+
+%plot the circle from '2022 planar compliance Realization' paper
+rk = sqrt(Kk(3,3)/(Kk(1,1)+ Kk(2,2)));   %circle radius
+
+% ceter coordinates = cx, cy
+theta = 0:0.01:2*pi;
+xp=rk*cos(theta);
+yp=rk*sin(theta);
+
+
+delete(findobj(ax, 'Tag', 'ccplot'))
+
+c = plot(x+xp,y+yp, 'LineWidth', 0.05, 'Color', 'r', 'Tag', 'ccplot');
+uistack(c, 'bottom')
+
+
+%Add code to plot the cone lines from '2022 planar compliance Realization' paper
+%finds the angle of the cone lines with respect to the horizontal
+angle = asin(sqrt(lambda(1)/(lambda(1) + lambda(2))));
+
+%gets the slope of the first line
+m1 = tan(angle);
+%gets the slope of the second line
+m2 = -tan(angle);
+
+%y-intercepts
+b1 = y - m1*x;
+b2 = y - m2*x;
+
+%Equations
+x12 = ((y + 1) - b1) / m1;
+x22 = ((y + 1) - b2) / m2;
+
+%xvalues to be plotted
+x1 = [x, x12];
+x2 = [x, x22];
+
+%Y value to be plotted
+y1 = [y, y+1];
+
+%Ce
+if isinf(m1)
+%Plot the lines
+pl1 = plot(ax, x1,y1,'r-','tag','cone1','linewidth', 0.05);
+pl2 = plot(ax, x2,y1,'r-','tag','cone2','linewidth', 0.05);
+uistack(pl1, 'bottom')
+uistack(pl2, 'bottom')
+
+end
+

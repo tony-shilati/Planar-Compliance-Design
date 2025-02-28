@@ -1,0 +1,26 @@
+function [] = checkConditoins(ax, C, phase)
+
+
+%First condtion - t12 and t34 must be on the same sides of w12 and w34
+
+%Second condition - t12 and t34 must be in the quadrilateral formed by j1-j4
+
+%Third condition - The segment connectiong j5 and j6 must cross the
+%quadrilateral formed by j1-j4 exactly once
+
+%Fourth condition - t12 must be in the triangle J3J4Q
+
+%Fifth condition - t34 mus be in the triangle J1J2P
+
+fig = get(ax, 'Parent');
+
+%Get neccesary information
+[p1x, p1y] = grabData('P1', ax);   %
+[p2x, p2y] = grabData('P2', ax);
+
+%Calculate the conditions
+
+%Output error message if neccesary
+
+
+end

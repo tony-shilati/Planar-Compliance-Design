@@ -1,0 +1,20 @@
+function cTableResize(src, event, fig)
+
+panel = findobj(fig, 'Tag', 'panel');
+set(panel, 'Units', 'Pixels');
+pSize = get(panel, 'Position');
+set(panel, 'Units', 'normalized')
+table = findobj(panel, 'Tag', 'table');
+jtable = findobj(panel, 'Tag', 'jout');
+
+w = 0.17*pSize(3);
+
+w2 = 0.3*pSize(3);
+
+set(table, 'ColumnWidth', {w w w});
+set(jtable, 'ColumnWidth', {w2 w2 w2 w2});
+
+
+
+
+end

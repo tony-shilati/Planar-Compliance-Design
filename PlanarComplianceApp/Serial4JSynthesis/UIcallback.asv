@@ -1,0 +1,58 @@
+function [ ] = UIcallback( obj, ~, ax, str )
+
+global phase C x1 y1
+
+if strcmp(str,'reset')
+    ch = get(ax,'Children');
+    phase = 0;
+    
+    delete(ch);
+    scatter(0,0,'+','markerfacecolor',[0 0 0],'sizedata',120,'markeredgecolor',[0 0 0]);
+    
+    [x,y] = compliantCenter(C);
+    scatter(x,y,'*','markerfacecolor','red','sizedata',100,'markeredgecolor','red','tag','cpoint');
+    
+    phase = goToPhase(1,ax);
+    
+    set(obj,'value',0);
+    
+elseif strcmp(str,'dim')
+    
+    val = str2num(get(obj,'string'));
+    
+    set(ax,'xlim',[-val, val]);
+    set(ax,'ylim',[-val, val]);
+   
+elseif strcmp(str,'c')
+    C = get(obj,'Data');
+    
+    ch = findobj('tag','cpoint');
+    if ~isempty(ch)
+       delete(ch); 
+    end
+    
+    [x,y] = compliantCenter(C);
+    scatter(x,y,'*','markerfacecolor','red','sizedata',100,'markeredgecolor','red','tag','cpoint');
+    figh = get(ax,'parent');
+    tb = findobj(figh,'tag','jout');
+    out = get(tb,'Data');
+    out{1,1} = x;
+    out{1,2} = y;
+    set(tb,'Data',out');
+    
+    
+    
+    ch = findobj('tag','line');
+    if ~isempty(ch)
+       delete(ch); 
+       drawLine(x1,y1,ax);
+    end
+    
+    
+end
+
+
+
+
+end
+

@@ -1,0 +1,51 @@
+function [] = UpdateUI(x, y, ax, K, phase)
+
+if phase == 1
+    drawPoint(x, y, 'P1', ax) %P1 == T12
+
+elseif phase == 2
+    drawPoint(x, y, 'P2', ax) %P2 == T34
+
+elseif phase == 3
+    drawPoint(x, y, 'N1', ax) %N1 is a handle for w1
+    [p1x, p1y] = grabData('P1', ax);
+    drawLine([p1x, x], [p1y, y], 'L1', ax) %L1 == w1
+
+elseif phase == 4
+    drawPoint(x, y, 'N2', ax) %N2 is a handle for w2
+    [p1x, p1y] = grabData('P1', ax);
+    drawLine([p1x, x], [p1y, y], 'L2', ax) %L2 == w2
+
+elseif phase == 5 
+    drawPoint(x, y, 'N3', ax) %N3 is a handle for w3
+    [p2x, p2y] = grabData('P2', ax);
+    drawLine([p2x, x], [p2y, y], 'L3', ax) %L3 == w3
+
+elseif phase == 6
+    drawPoint(x, y, 'N4', ax) %N4 is a handel for w4
+    [p2x, p2y] = grabData('P2', ax);
+    drawLine([p2x, x], [p2y, y], 'L4', ax) %L4 == w4
+
+elseif phase == 7 
+    drawQuadCurve(ax, K, 1);
+    drawPoint(x, y, 'P3', ax) %P3 == T56
+
+elseif phase == 8
+    drawPoint(x, y, 'N5', ax) %N5 is a handle for w5
+    [p3x, p3y] = grabData('P3', ax);
+    drawLine([p3x, x], [p3y, y], 'L5', ax) %L5 == w5
+
+elseif phase == 9
+    drawPoint(x, y, 'N6', ax) %N6 is a handle for w6
+    [p3x, p3y] = grabData('P3', ax);
+    drawLine([p3x, x], [p3y, y], 'L6', ax) %L6 == w6
+    %Check if the condition in step 4 of the syntheis is satisfied
+    Outputs(ax, K)
+    [ec1, ec2, ec3] = checkConditons(K, ax);
+    llegend('', '', 'wrench 1', 'wrench2', 'wrench 3', 'wrench4', '', 'wrench 5', 'wrench 6', 'AutoUpdate', off)
+
+
+end
+
+
+end

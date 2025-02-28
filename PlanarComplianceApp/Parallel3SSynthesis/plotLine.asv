@@ -1,0 +1,36 @@
+function [] = plotLine(ax, tag, m, x1, y1)
+
+old = findobj(ax, 'Tag', tag);
+if ~isempty(old)
+    delete(old)
+end
+
+if strcmp(tag, 'line1')
+    color = '#5DB5F8';
+elseif strcmp(tag, 'line2')
+    color = '#77AC30';
+elseif strcmp(tag, 'line3')
+    color = '#A2142F';
+elseif strcmp(tag, 'cone1') || strcmp(tag, 'cone2')
+    color = 'r';
+end 
+
+fig = get(ax, 'Parent');
+scalar = findobj(fig, 'Tag', 'dim');
+scalarstr = get(scalar, 'String');
+scalarnum = str2double(scalarstr);
+X = -scalarnum:0.01:scalarnum;
+
+if isinf(m)
+    plt1 = xline(x1, 'Color', color, 'Tag', tag, 'LineWidth', 1);
+    set(plt1, 'ButtonDownFcn', {@MouseClick, ax})
+    uistack(plt1, 'bottom')
+
+else
+    line = m*(X-x1) + y1;
+    plt = plot(X, line, 'Color', color, 'Tag', tag, 'LineWidth', 1);
+    set(plt, 'ButtonDownFcn', {@MouseClick, ax})
+    uistack(plt, 'bottom')
+end
+
+end
